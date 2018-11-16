@@ -504,10 +504,14 @@
             },
             {
                 "key": "ctrl+x 2",
-                "command": "workbench.action.splitEditor"
+                "command": "workbench.action.splitEditorDown"
             },
             {
                 "key": "ctrl+x 3",
+                "command": "workbench.action.splitEditorRight"
+            },
+            {
+                "key": "ctrl+x 4",
                 "command": "workbench.action.toggleEditorGroupLayout"
             },
             {

@@ -91,8 +91,9 @@ The following are some of the changes and enhancements from the original:
 | `C-x k` | Close current tab (buffer) |
 | `C-x C-k` | Close all tabs |
 | `C-x 1` | Close editors in other (split) group.  |
-| `C-x 2` | Split editor |
-| `C-x 3` | Toggle split layout (vertical to horizontal) |
+| `C-x 2` | Split editor horizontal |
+| `C-x 3` | Split editor vertical |
+| `C-x 4` | Toggle split layout (vertical to horizontal) |
 | `C-x o` | Focus other split editor |
 
 ## Conflicts with default key bindings
