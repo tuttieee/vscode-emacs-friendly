@@ -395,7 +395,7 @@
             {
                 "key": "ctrl+g",
                 "command": "emacs.exitMarkMode",
-                "when": "editorTextFocus && editorHasSelection"
+                "when": "editorTextFocus"
             },
             {
                 "key": "ctrl+g",
@@ -406,11 +406,6 @@
                 "key": "ctrl+g",
                 "command": "closeReferenceSearch",
                 "when": "referenceSearchVisible && !config.editor.stablePeek"
-            },
-            {
-                "key": "ctrl+g",
-                "command": "removeSecondaryCursors",
-                "when": "editorHasMultipleSelections && editorTextFocus"
             },
             {
                 "key": "ctrl+g",
