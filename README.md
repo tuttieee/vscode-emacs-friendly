@@ -1,6 +1,6 @@
 # vscode-emacs-friendly
 
-This plugin provides emacs keybindings and workflow for Visual Studio Code and is a fork of the great vscode extension by [hiro-sun](https://github.com/hiro-sun/vscode-emacs).
+This plugin provides emacs keybindings and workflow for Visual Studio Code and is a fork of the great vscode extension by [hiro-sun](https://github.com/hiro-sun/vscode-emacs) and [SebastianZaha](https://github.com/SebastianZaha/vscode-emacs-friendly).
 
 It merges some of the pull requests in the original and other external helpers that make the extension a little less an exact copy of emacs behavior, and a little more friendly in interacting with the system clipboard and normal vscode interactions.
 
