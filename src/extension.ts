@@ -63,7 +63,24 @@ function initMarkMode(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(vscode.commands.registerCommand(
         'emacs.exitMarkMode', () => {
-            vscode.commands.executeCommand("cancelSelection");
+            const selections = vscode.window.activeTextEditor.selections;
+            const hasMultipleSelecitons = selections.length > 1;
+            if (hasMultipleSelecitons) {
+                const allSelectionsAreEmpty = selections.every(selection => selection.isEmpty);
+                if (allSelectionsAreEmpty) {
+                    vscode.commands.executeCommand("removeSecondaryCursors");
+                } else {
+                    // initSelection() is used here instead of `executeCommand("cancelSelection")`
+                    // because `cancelSelection` command not only cancels selection state
+                    // but also removes secondary cursors though these should remain in this case.
+                    initSelection();
+                }
+            } else {
+                // This `executeCommand("cancelSelection")` may be able to be replaced with `initSelection()`,
+                // however, the core command is used here to follow its updates with ease.
+                vscode.commands.executeCommand("cancelSelection");
+            }
+
             if (inMarkMode) {
                 inMarkMode = false;
             }
@@ -76,6 +93,9 @@ function registerCommand(commandName: string, op: Operation): vscode.Disposable 
 }
 
 function initSelection(): void {
-    var currentPosition: vscode.Position = vscode.window.activeTextEditor.selection.active;
-    vscode.window.activeTextEditor.selection = new vscode.Selection(currentPosition, currentPosition);
+    // Set new `anchor` and `active` values to all selections so that these are initialized to be empty.
+    vscode.window.activeTextEditor.selections = vscode.window.activeTextEditor.selections.map(selection => {
+        const currentPosition: vscode.Position = selection.active;
+        return new vscode.Selection(currentPosition, currentPosition);
+    });
 }
