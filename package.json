@@ -499,6 +499,10 @@
                 "command": "workbench.action.newWindow"
             },
             {
+                "key": "ctrl+x 0",
+                "command": "workbench.action.closeEditorsInGroup"
+            },
+            {
                 "key": "ctrl+x 1",
                 "command": "workbench.action.closeEditorsInOtherGroups"
             },

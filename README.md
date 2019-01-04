@@ -90,6 +90,7 @@ The following are some of the changes and enhancements from the original:
 | `C-x C-f` | QuickOpen a file |
 | `C-x k` | Close current tab (buffer) |
 | `C-x C-k` | Close all tabs |
+| `C-x 0` | Close editors in the current group.  |
 | `C-x 1` | Close editors in other (split) group.  |
 | `C-x 2` | Split editor horizontal |
 | `C-x 3` | Split editor vertical |
