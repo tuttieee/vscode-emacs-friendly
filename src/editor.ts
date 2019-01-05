@@ -44,21 +44,48 @@ export class Editor {
 		return vscode.window.setStatusBarMessage(text);
 	}
 
-	getSelectionRange(): vscode.Range {
-		let selection = vscode.window.activeTextEditor.selection,
-			start = selection.start,
-			end = selection.end;
+	getSelectionRanges(): vscode.Range[] {
+		const selections = vscode.window.activeTextEditor.selections;
+		const ranges: vscode.Range[] = selections.map((selection) => {
+			if (selection.start.character === selection.end.character &&
+				selection.start.line === selection.end.line) {
+				return null;
+			}
+			return new vscode.Range(selection.start, selection.end);
+		});
 
-		return (start.character !== end.character || start.line !== end.line) ? new vscode.Range(start, end) : null;
+		return ranges;
+	}
+
+	getSelections(): vscode.Selection[] {
+		return vscode.window.activeTextEditor.selections;
+	}
+
+	getSelectionsText(): string {
+		const ranges = this.getSelectionRanges();
+		const sortedRanges = ranges
+			.sort((a, b) => {
+				if (a.start.line > b.start.line) return 1;
+				else if(a.start.line < b.start.line) return -1;
+				else {
+					if (a.start.character > b.start.character) return 1;
+					else if (a.start.character < b.start.character) return -1;
+					else return 0;
+				}
+			});
+		const getText = vscode.window.activeTextEditor.document.getText;
+		let text = '';
+		sortedRanges.forEach((range, i) => {
+			const prevRange = sortedRanges[i - 1];
+			if (prevRange && prevRange.start.line !== range.start.line) text += '\n' + getText(range);
+			else text += getText(range);
+		});
+
+		return text;
 	}
 
 	getSelection(): vscode.Selection {
 		return vscode.window.activeTextEditor.selection;
-	}
-
-	getSelectionText(): string {
-		let r = this.getSelectionRange()
-		return r ? vscode.window.activeTextEditor.document.getText(r) : ''
 	}
 
 	setSelection(start: vscode.Position, end: vscode.Position): void {
@@ -107,19 +134,21 @@ export class Editor {
 	}
 
 	copy(): void {
-		clip.writeSync(this.getSelectionText())
+		clip.writeSync(this.getSelectionsText());
 		vscode.commands.executeCommand("emacs.exitMarkMode")
 	}
 
 	cut(appendClipboard?: boolean): Thenable<boolean> {
 		if (appendClipboard) {
-			clip.writeSync(clip.readSync() + this.getSelectionText());
+			clip.writeSync(clip.readSync() + this.getSelectionsText());
 		} else {
-			clip.writeSync(this.getSelectionText());
+			clip.writeSync(this.getSelectionsText());
 		}
-		let t = Editor.delete(this.getSelectionRange());
-		vscode.commands.executeCommand("emacs.exitMarkMode");
-		return t
+		const t = Editor.delete(this.getSelectionRanges());
+
+		vscode.commands.executeCommand('emacs.exitMarkMode');
+
+		return t;
 	}
 
 	yank(): Thenable<{}> {
@@ -176,12 +205,12 @@ export class Editor {
 		vscode.window.activeTextEditor.selection = new vscode.Selection(anchor, anchor)
 	}
 
-	static delete(range: vscode.Range = null): Thenable<boolean> {
-		if (range) {
-			return vscode.window.activeTextEditor.edit(editBuilder => {
+	static delete(ranges: vscode.Range[]): Thenable<boolean> {
+		return vscode.window.activeTextEditor.edit(editBuilder => {
+			ranges.forEach(range => {
 				editBuilder.delete(range);
 			});
-		}
+		});
 	}
 
 	deleteLine() : void {
